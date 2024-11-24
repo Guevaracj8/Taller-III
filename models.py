@@ -29,9 +29,32 @@ class Student(BaseModel):
     address: str
     academicRecord: List[subjects]
     
+studentsList = []
+
+@app.get("/students/")
+def listOfStudents():
+    return studentsList
+    
 @app.post("/students/")
 async def create_student(student: Student):
     info = {"Students": student}
+    studentsList.append(student)
     return info
+
+@app.put("/students/{id}")
+async def update_student(id: int, student: Student):
+    for stu in studentsList:
+        if stu.id == id:
+            index = studentsList.index(stu)
+            studentsList[index] = student
+    return student
+
+@app.delete("/students/{id}")
+async def delete_student(id: int):
+    for stu in studentsList:
+        if stu.id == id:
+            index = studentsList.index(stu)
+            del studentsList[index]
+    return {"mensaje": "Student Deleted Correctly."}
     
     
